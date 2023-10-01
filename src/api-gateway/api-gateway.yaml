@@ -1,9 +1,9 @@
 Clients:
-        - Dummy
+        - Cars
 
-Dummy:
+Cars:
         Host: "127.0.0.1"
-        Port: 8002
+        Port: 8070
 
 Server:
         Port: 8080

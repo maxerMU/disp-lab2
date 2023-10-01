@@ -11,15 +11,14 @@ void GetCarsRoute::Init(const IRequestHandlerContextPtr &context, const std::map
 
 void GetCarsRoute::SetRequestParameters(const std::vector<std::string> &params)
 {
-    for (const auto& param : params)
-        LoggerFactory::GetLogger()->LogInfo(param.c_str());
+    if (params.size() != 3)
+        LoggerFactory::GetLogger()->LogError("get cars incorrect params count");
 }
 
 void GetCarsRoute::ProcessRequest(const IRequestPtr &request, size_t &clientIndex)
 {
-    clientIndex = m_clientsIndexes[DUMMY_CLIENT];
-    request->SetTarget("/info");
-    request->SetMethod(net::GET);
+    clientIndex = m_clientsIndexes[CARS_CLIENT];
+    request->copy(m_context->GetCurrentRequest());
 }
 
 void GetCarsRoute::ProcessResponse(const IResponsePtr &responseFromClient)

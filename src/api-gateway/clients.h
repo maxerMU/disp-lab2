@@ -2,4 +2,4 @@
 
 #include <string.h>
 
-const std::string DUMMY_CLIENT = "Dummy";
+const std::string CARS_CLIENT = "Cars";
