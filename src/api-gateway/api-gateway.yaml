@@ -1,9 +1,14 @@
 Clients:
         - Cars
+        - Rents
 
 Cars:
         Host: "127.0.0.1"
         Port: 8070
+
+Rents:
+        Host: "127.0.0.1"
+        Port: 8060
 
 Server:
         Port: 8080

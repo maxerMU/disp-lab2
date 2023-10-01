@@ -14,6 +14,8 @@ target_sources( ${PROJECT_NAME} PRIVATE
 
   routes/GetCarsRoute.h
   routes/GetCarsRoute.cpp
+  routes/GetRentsRoute.h
+  routes/GetRentsRoute.cpp
 )
 
 target_include_directories(${PROJECT_NAME} 

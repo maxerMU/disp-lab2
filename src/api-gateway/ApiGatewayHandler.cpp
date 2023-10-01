@@ -6,6 +6,7 @@
 
 ApiGatewayHandler::ApiGatewayHandler(const IConfigPtr &config) : m_config(config)
 {
+    SetClientIndexes(m_config);
 }
 
 IClientServerReqHandler::state_t ApiGatewayHandler::HandleRequest(const std::shared_ptr<IRequest> &request)

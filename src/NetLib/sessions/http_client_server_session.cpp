@@ -1,5 +1,7 @@
 #include "http_client_server_session.h"
 
+#include <logger/LoggerFactory.h>
+
 #include "beast_req.h"
 #include "beast_resp.h"
 #include "http_read_awaiter.h"
@@ -53,7 +55,7 @@ std::future<void> HttpClientServerSession::Run(tcp::socket server_sock,
             }
 
             auto beast_req = MakeBeastReq(server_req);
-            // std::cout << "next client: " << next_client << std::endl;
+            LoggerFactory::GetLogger()->LogInfo((std::string("next client: ") + std::to_string(next_client)).c_str());
             // std::cout << "is connected: "
             // << clients_sock[next_client]->is_open() << std::endl;
             // std::cout << req_ptr->GetBody() << std::endl;
