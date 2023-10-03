@@ -1,8 +1,8 @@
 Server:
-        Port: 8060
+        Port: 8050
 
-DB_Rents:
-        DB_NAME: "rentals"
+DB_Payments:
+        DB_NAME: "payments"
         DB_USER: "postgres"
         DB_USER_PASSWORD: "postgres"
         DB_HOST: "127.0.0.1"
