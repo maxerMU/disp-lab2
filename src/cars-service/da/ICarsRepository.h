@@ -11,6 +11,7 @@ public:
 
     virtual CarsDTO GetAllCars() = 0;
     virtual CarsDTO GetAvailableCars() = 0;
+    virtual CarDTO GetCar(const std::string& carUid) = 0;
 };
 
 using ICarsRepositoryPtr = std::shared_ptr<ICarsRepository>;

@@ -4,6 +4,8 @@
 #include <network/net.h>
 #include <router/router.h>
 
+#include "context/ApiGatewayContext.h"
+
 ApiGatewayHandler::ApiGatewayHandler(const IConfigPtr &config) : m_config(config)
 {
     SetClientIndexes(m_config);
@@ -11,7 +13,7 @@ ApiGatewayHandler::ApiGatewayHandler(const IConfigPtr &config) : m_config(config
 
 IClientServerReqHandler::state_t ApiGatewayHandler::HandleRequest(const std::shared_ptr<IRequest> &request)
 {
-    m_context = CreateRequestsHandlerContext();
+    m_context = std::make_shared<ApiGatewayContext>();
     m_context->GetCurrentRequest()->copy(request);
 
     m_routes = RequestsRouter::Instanse()->RouteClientServerReq(request->GetTarget(), request->GetMethod());
@@ -32,9 +34,16 @@ IClientServerReqHandler::state_t ApiGatewayHandler::GetNextRequest(IRequestPtr &
     if (m_currentRoute >= m_routes.size())
         return RES_END;
 
-    m_routes[m_currentRoute]->Init(m_context, m_clientIndexes);
     try
     {
+        if (m_routes[m_currentRoute]->GetRouteType() == IClientServerRoute::REQUEST_PREPARE)
+            m_routes[m_currentRoute++]->Init(m_context, m_clientIndexes);
+
+        m_routes[m_currentRoute]->Init(m_context, m_clientIndexes);
+        
+        if (m_routes[m_currentRoute]->GetRouteType() == IClientServerRoute::RESPONSE_MAKER)
+            return RES_END;
+
         m_routes[m_currentRoute]->ProcessRequest(request, clientIndex);
     }
     catch (std::exception &ex)
@@ -61,6 +70,9 @@ IClientServerReqHandler::state_t ApiGatewayHandler::HandleResponse(const IRespon
         m_context->GetCurrentResponse()->SetStatus(net::CODE_503);
         return RES_END;
     }
+    if (m_context->GetCurrentResponse()->GetStatus() != net::CODE_200)
+        return RES_END;
+
     if (m_currentRoute == m_routes.size())
         return RES_END;
 

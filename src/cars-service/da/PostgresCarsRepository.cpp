@@ -83,6 +83,38 @@ CarsDTO PostgresCarsRepository::GetAvailableCars()
     return cars;
 }
 
+CarDTO PostgresCarsRepository::GetCar(const std::string& carUid)
+{
+    pqxx::result rows;
+    try
+    {
+        pqxx::work w(*m_connection);
+        rows = w.exec_prepared(m_requestsNames[READ_BY_UID], carUid);
+        w.commit();
+    }
+    catch (std::exception &ex)
+    {
+        throw DatabaseExecutionException(ex.what());
+    }
+
+    if (rows.empty())
+        throw DatabaseNotFoundException(carUid.c_str());
+
+    CarDTO car{
+        rows[0]["id"].as<size_t>(),
+        rows[0]["car_uid"].as<std::string>(),
+        rows[0]["brand"].as<std::string>(),
+        rows[0]["model"].as<std::string>(),
+        rows[0]["registration_number"].as<std::string>(),
+        rows[0]["power"].as<size_t>(),
+        rows[0]["price"].as<size_t>(),
+        rows[0]["type"].as<std::string>(),
+        rows[0]["availability"].as<bool>()
+    };
+
+    return car;
+}
+
 void PostgresCarsRepository::ReadConfig(const IConfigPtr &conf, const std::string &connectionSection)
 {
     m_name = conf->GetStringField({connectionSection, DbNameSection});
@@ -116,18 +148,5 @@ void PostgresCarsRepository::AddPrepareStatements()
 {
     m_connection->prepare(m_requestsNames[READ_ALL], "SELECT * FROM cars");
     m_connection->prepare(m_requestsNames[READ_AVAILABLE], "SELECT * FROM cars WHERE availability=true");
+    m_connection->prepare(m_requestsNames[READ_BY_UID], "SELECT * FROM cars WHERE car_uid=$1");
 }
-
-// void PostgresCarsRepository::AddPerson(const PersonPostDTO &person)
-// {
-//     try
-//     {
-//         pqxx::work w(*m_connection);
-//         w.exec_prepared(m_requestsNames[WRITE], person.name, person.age, person.address, person.work);
-//         w.commit();
-//     }
-//     catch (...)
-//     {
-//         throw DatabaseExecutionException("can't execute prepared");
-//     }
-// }

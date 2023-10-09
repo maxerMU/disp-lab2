@@ -37,6 +37,26 @@ void GetCars(const IResponsePtr &resp, const IRequestPtr &, const std::vector<st
     resp->SetStatus(net::CODE_200);
 }
 
+void GetCar(const IResponsePtr &resp, const IRequestPtr &, const std::vector<std::string>& params)
+{
+    if (params.size() != 1)
+    {
+        LoggerFactory::GetLogger()->LogError("get car incorrect params number");
+        resp->SetStatus(net::CODE_400);
+    }
+
+    try
+    {
+        CarDTO car = CarsFacade::Instance()->GetCar(params[0]);
+        resp->SetBody(car.ToJSON());
+        resp->SetStatus(net::CODE_200);
+    }
+    catch(const CarNotFoundException& e)
+    {
+        resp->SetBody(e.what());
+        resp->SetStatus(net::CODE_404);
+    }
+}
 
 void SetupRouter()
 {
@@ -44,4 +64,6 @@ void SetupRouter()
 
     std::regex getCarsTarget("/api/v1/cars\\?page=([0-9\\-]+)&size=([0-9\\-]+)&showAll=(true|false)");
     RequestsRouter::Instanse()->AddDynamicEndpoint({getCarsTarget, net::GET}, GetCars);
+
+    RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/cars/([0-9\\-a-z]+)"), net::GET}, GetCar);
 }

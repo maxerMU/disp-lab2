@@ -14,7 +14,22 @@ void RentsFacade::Init(const IRentsRepositoryPtr &repository)
     m_repository = repository;
 }
 
-RentsDTO RentsFacade::GetRents(std::string username) const
+RentDTO RentsFacade::GetRent(const std::string &username, const std::string &rentalUid) const
+{
+    if (!m_repository)
+        throw NotInitializedException("repository doesn't initilized");
+
+    try
+    {
+        return m_repository->GetRent(username, rentalUid);
+    }
+    catch(const DatabaseNotFoundException &e)
+    {
+        throw(RentNotFoundException(e.what()));
+    }
+}
+
+RentsDTO RentsFacade::GetRents(const std::string& username) const
 {
     if (!m_repository)
         throw NotInitializedException("repository doesn't initilized");

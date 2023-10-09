@@ -12,8 +12,30 @@ target_sources( ${PROJECT_NAME} PRIVATE
   ApiGatewayHandler.h
   ApiGatewayHandler.cpp
 
+  context/ApiGatewayContext.h
+  context/ApiGatewayContext.cpp
+
+  dto/CarDTO.h
+  dto/CarDTO.cpp
+  dto/GetRentDTO.h
+  dto/GetRentDTO.cpp
+  dto/PaymentDTO.h
+  dto/PaymentDTO.cpp
+  dto/RentDTO.h
+  dto/RentDTO.cpp
+
+  routes/GetRentPrep.h
+  routes/GetRentPrep.cpp
+  routes/GetRentPost.h
+  routes/GetRentPost.cpp
+  routes/GetCarRoute.h
+  routes/GetCarRoute.cpp
   routes/GetCarsRoute.h
   routes/GetCarsRoute.cpp
+  routes/GetPaymentRoute.h
+  routes/GetPaymentRoute.cpp
+  routes/GetRentRoute.h
+  routes/GetRentRoute.cpp
   routes/GetRentsRoute.h
   routes/GetRentsRoute.cpp
 )
@@ -27,4 +49,5 @@ target_link_libraries( ${PROJECT_NAME}
     PRIVATE
         base
         NetLib
+        jsoncpp_lib
 )

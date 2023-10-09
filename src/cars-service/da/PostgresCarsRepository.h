@@ -13,6 +13,7 @@ public:
 
     virtual CarsDTO GetAllCars() override;
     virtual CarsDTO GetAvailableCars() override;
+    virtual CarDTO GetCar(const std::string& carUid) override;
 
 private:
     void ReadConfig(const IConfigPtr &conf, const std::string &connectionSection);
@@ -32,10 +33,12 @@ private:
     {
         READ_AVAILABLE,
         READ_ALL,
+        READ_BY_UID
     };
 
     std::map<PreparedRequests, std::string> m_requestsNames = {
         {READ_AVAILABLE, "get_available_cars"},
-        {READ_ALL, "get_all_persons"}
+        {READ_ALL, "get_all_cars"},
+        {READ_BY_UID, "get_by_uid"}
     };
 };

@@ -12,6 +12,14 @@ public:
     virtual void SetRequestParameters(const std::vector<std::string>& params) = 0;
     virtual void ProcessRequest(const IRequestPtr& request, size_t& clientIndex) = 0;
     virtual void ProcessResponse(const IResponsePtr& responseFromClient) = 0;
+
+    enum RouteType
+    {
+        DEFAULT_ROUTE,
+        REQUEST_PREPARE,
+        RESPONSE_MAKER
+    };
+    virtual RouteType GetRouteType() const { return DEFAULT_ROUTE; }
 };
 
 using IClientServerRoutePtr = std::shared_ptr<IClientServerRoute>;

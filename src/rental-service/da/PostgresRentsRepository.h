@@ -12,6 +12,7 @@ public:
     PostgresRentsRepository(const IConfigPtr &conf, const std::string &connectionSection);
 
     virtual RentsDTO GetRents(const std::string& username) override;
+    virtual RentDTO GetRent(const std::string& username, const std::string& rentalUid) override;
 
 private:
     void ReadConfig(const IConfigPtr &conf, const std::string &connectionSection);
@@ -29,10 +30,10 @@ private:
 
     enum PreparedRequests
     {
-        // READ_AVAILABLE,
+        READ,
         READ_ALL
     };
 
-    std::map<PreparedRequests, std::string> m_requestsNames = { // {READ_AVAILABLE, "get_available_Rents"},
+    std::map<PreparedRequests, std::string> m_requestsNames = {{READ, "get_rent"},
                                                                {READ_ALL, "get_all_rents"}};
 };

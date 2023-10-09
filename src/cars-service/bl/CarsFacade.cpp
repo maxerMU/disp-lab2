@@ -39,3 +39,18 @@ CarsDTO CarsFacade::GetCars(size_t page, size_t pageSize, bool showAll) const
 
     return CarsDTO(cars.begin() + from, cars.begin() + to);
 }
+
+CarDTO CarsFacade::GetCar(const std::string &uid)
+{
+    if (!m_repository)
+        throw NotInitializedException("repository doesn't initilized");
+    
+    try
+    {
+        return m_repository->GetCar(uid);
+    }
+    catch(const DatabaseNotFoundException& e)
+    {
+        throw CarNotFoundException(e.what());
+    }
+}

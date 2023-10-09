@@ -46,6 +46,37 @@ RentsDTO PostgresRentsRepository::GetRents(const std::string &username)
     return rents;
 }
 
+RentDTO PostgresRentsRepository::GetRent(const std::string &username, const std::string &rentalUid)
+{
+    pqxx::result rows;
+    try
+    {
+        pqxx::work w(*m_connection);
+        rows = w.exec_prepared(m_requestsNames[READ], username, rentalUid);
+        w.commit();
+    }
+    catch (std::exception &ex)
+    {
+        throw DatabaseExecutionException(ex.what());
+    }
+
+    if (rows.size() != 1)
+        throw DatabaseNotFoundException("Rent not found");
+
+    RentDTO rent{
+        rows[0]["id"].as<size_t>(),
+        rows[0]["rental_uid"].as<std::string>(),
+        rows[0]["username"].as<std::string>(),
+        rows[0]["payment_uid"].as<std::string>(),
+        rows[0]["car_uid"].as<std::string>(),
+        rows[0]["date_from"].as<std::string>(),
+        rows[0]["date_to"].as<std::string>(),
+        rows[0]["status"].as<std::string>()
+    };
+
+    return rent;
+}
+
 void PostgresRentsRepository::ReadConfig(const IConfigPtr &conf, const std::string &connectionSection)
 {
     m_name = conf->GetStringField({connectionSection, DbNameSection});
@@ -78,18 +109,5 @@ void PostgresRentsRepository::Connect()
 void PostgresRentsRepository::AddPrepareStatements()
 {
     m_connection->prepare(m_requestsNames[READ_ALL], "SELECT * FROM rents WHERE username=$1");
+    m_connection->prepare(m_requestsNames[READ], "SELECT * FROM rents WHERE username=$1 and rental_uid=$2");
 }
-
-// void PostgresRentsRepository::AddPerson(const PersonPostDTO &person)
-// {
-//     try
-//     {
-//         pqxx::work w(*m_connection);
-//         w.exec_prepared(m_requestsNames[WRITE], person.name, person.age, person.address, person.work);
-//         w.commit();
-//     }
-//     catch (...)
-//     {
-//         throw DatabaseExecutionException("can't execute prepared");
-//     }
-// }
