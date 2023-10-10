@@ -61,7 +61,10 @@ IClientServerReqHandler::state_t ApiGatewayHandler::HandleResponse(const IRespon
 {
     try
     {
-        m_routes[m_currentRoute++]->ProcessResponse(response);
+        IClientServerRoute::ResponceType respType = m_routes[m_currentRoute]->ProcessResponse(response);
+        if (respType == IClientServerRoute::END_ROUTE)
+            m_currentRoute++;
+
     }
     catch (std::exception &ex)
     {

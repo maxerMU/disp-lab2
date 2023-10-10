@@ -26,6 +26,8 @@ void GetPaymentRoute::ProcessRequest(const IRequestPtr &request, size_t &clientI
     std::string paymentUid;
     if (m_context->GetRequestType() == ApiGatewayContext::GetRent)
         paymentUid = m_context->GetProcessInfo().getRentRequest.rent.paymentUid;
+    else if (m_context->GetRequestType() == ApiGatewayContext::GetRents)
+        paymentUid = m_context->GetProcessInfo().getRentsRequest.rents[m_iteration].paymentUid;
     
     if (paymentUid.empty())
         throw UndefinedPaymentUidException("get payment route");
@@ -34,12 +36,12 @@ void GetPaymentRoute::ProcessRequest(const IRequestPtr &request, size_t &clientI
     request->SetTarget(GET_PAYMENT_BASE_TARGET + "/" + paymentUid);
 }
 
-void GetPaymentRoute::ProcessResponse(const IResponsePtr &responseFromClient)
+IClientServerRoute::ResponceType GetPaymentRoute::ProcessResponse(const IResponsePtr &responseFromClient)
 {
     if (responseFromClient->GetStatus() == net::CODE_404)
     {
         m_context->GetCurrentResponse()->SetStatus(net::CODE_404);
-        return;
+        return IClientServerRoute::END_ROUTE;
     }
 
     if (responseFromClient->GetStatus() != net::CODE_200)
@@ -53,4 +55,13 @@ void GetPaymentRoute::ProcessResponse(const IResponsePtr &responseFromClient)
 
     if (m_context->GetRequestType() == ApiGatewayContext::GetRent)
         m_context->GetProcessInfo().getRentRequest.payment = payment;
+    else if (m_context->GetRequestType() == ApiGatewayContext::GetRents)
+    {
+        m_context->GetProcessInfo().getRentsRequest.payments.push_back(payment);
+        m_iteration++;
+        if (m_iteration < m_context->GetProcessInfo().getRentsRequest.rents.size())
+            return IClientServerRoute::REPEAT_ROUTE;
+    }
+
+    return IClientServerRoute::END_ROUTE;
 }

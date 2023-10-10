@@ -11,7 +11,9 @@
 #include "routes/GetPaymentRoute.h"
 #include "routes/GetRentsRoute.h"
 #include "routes/GetRentPrep.h"
+#include "routes/GetRentsPrep.h"
 #include "routes/GetRentPost.h"
+#include "routes/GetRentsPost.h"
 #include "routes/GetRentRoute.h"
 
 void SetupRouter()
@@ -21,7 +23,11 @@ void SetupRouter()
     RequestsRouter::Instanse()->AddDynamicEndpoint({getCarsTarget, net::GET}, getCarsRoute);
 
     std::vector<IClientServerRouteCreatorPtr> getRentsRoute{
-        std::make_shared<ClientServerRouteCreator<GetRentsRoute>>()
+        std::make_shared<ClientServerRouteCreator<GetRentsPrep>>(),
+        std::make_shared<ClientServerRouteCreator<GetRentsRoute>>(),
+        std::make_shared<ClientServerRouteCreator<GetCarRoute>>(),
+        std::make_shared<ClientServerRouteCreator<GetPaymentRoute>>(),
+        std::make_shared<ClientServerRouteCreator<GetRentsPost>>()
     };
     RequestsRouter::Instanse()->AddStaticEndpoint({"/api/v1/rental", net::GET}, getRentsRoute);
 

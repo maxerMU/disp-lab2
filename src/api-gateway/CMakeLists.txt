@@ -26,8 +26,12 @@ target_sources( ${PROJECT_NAME} PRIVATE
 
   routes/GetRentPrep.h
   routes/GetRentPrep.cpp
+  routes/GetRentsPrep.h
+  routes/GetRentsPrep.cpp
   routes/GetRentPost.h
   routes/GetRentPost.cpp
+  routes/GetRentsPost.h
+  routes/GetRentsPost.cpp
   routes/GetCarRoute.h
   routes/GetCarRoute.cpp
   routes/GetCarsRoute.h

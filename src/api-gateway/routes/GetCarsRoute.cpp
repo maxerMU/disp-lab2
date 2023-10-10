@@ -21,7 +21,9 @@ void GetCarsRoute::ProcessRequest(const IRequestPtr &request, size_t &clientInde
     request->copy(m_context->GetCurrentRequest());
 }
 
-void GetCarsRoute::ProcessResponse(const IResponsePtr &responseFromClient)
+IClientServerRoute::ResponceType GetCarsRoute::ProcessResponse(const IResponsePtr &responseFromClient)
 {
     m_context->GetCurrentResponse()->copy(responseFromClient);
+
+    return IClientServerRoute::END_ROUTE;
 }

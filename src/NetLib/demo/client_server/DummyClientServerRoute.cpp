@@ -21,7 +21,8 @@ void DummyClientServerRoute::ProcessRequest(const IRequestPtr &request, size_t &
     request->SetMethod(net::GET);
 }
 
-void DummyClientServerRoute::ProcessResponse(const IResponsePtr &responseFromClient)
+IClientServerRoute::ResponceType DummyClientServerRoute::ProcessResponse(const IResponsePtr &responseFromClient)
 {
     m_context->GetCurrentResponse()->copy(responseFromClient);
+    return IClientServerRoute::END_ROUTE;
 }

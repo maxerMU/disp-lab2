@@ -2,7 +2,7 @@
 
 #include <router/IClientServerRoute.h>
 
-class GetRentPrep : public IClientServerRoute
+class GetRentsPrep : public IClientServerRoute
 {
 public:
     virtual void Init(const IRequestHandlerContextPtr &context, const std::map<std::string, size_t> clients) override;

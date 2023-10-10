@@ -26,6 +26,8 @@ void GetCarRoute::ProcessRequest(const IRequestPtr &request, size_t &clientIndex
     std::string carUid;
     if (m_context->GetRequestType() == ApiGatewayContext::GetRent)
         carUid = m_context->GetProcessInfo().getRentRequest.rent.carUid;
+    else if (m_context->GetRequestType() == ApiGatewayContext::GetRents)
+        carUid = m_context->GetProcessInfo().getRentsRequest.rents[m_iteration].carUid;
     
     if (carUid.empty())
         throw UndefinedCarUidException("get car route");
@@ -34,12 +36,12 @@ void GetCarRoute::ProcessRequest(const IRequestPtr &request, size_t &clientIndex
     request->SetTarget(GET_CAR_BASE_TARGET + "/" + carUid);
 }
 
-void GetCarRoute::ProcessResponse(const IResponsePtr &responseFromClient)
+IClientServerRoute::ResponceType GetCarRoute::ProcessResponse(const IResponsePtr &responseFromClient)
 {
     if (responseFromClient->GetStatus() == net::CODE_404)
     {
         m_context->GetCurrentResponse()->SetStatus(net::CODE_404);
-        return;
+        return IClientServerRoute::END_ROUTE;
     }
 
     if (responseFromClient->GetStatus() != net::CODE_200)
@@ -52,5 +54,17 @@ void GetCarRoute::ProcessResponse(const IResponsePtr &responseFromClient)
     car.FromJSON(responseFromClient->GetBody());
 
     if (m_context->GetRequestType() == ApiGatewayContext::GetRent)
+    {
         m_context->GetProcessInfo().getRentRequest.car = car;
+        return IClientServerRoute::END_ROUTE;
+    }
+    else if (m_context->GetRequestType() == ApiGatewayContext::GetRents)
+    {
+        m_context->GetProcessInfo().getRentsRequest.cars.push_back(car);
+        m_iteration++;
+        if (m_iteration < m_context->GetProcessInfo().getRentsRequest.rents.size())
+            return IClientServerRoute::REPEAT_ROUTE;
+    }
+
+    return IClientServerRoute::END_ROUTE;
 }

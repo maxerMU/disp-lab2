@@ -50,3 +50,18 @@ std::string GetRentDTO::ToJSON() const
 
     return writer.write(root);
 }
+
+std::string ToJSON(const GetRentsDTO &rents)
+{
+    Json::Value arr = Json::arrayValue;
+
+    for (auto rent : rents)
+    {
+        Json::Value root = GetJSON(rent);
+        arr.append(root);
+    }
+
+    Json::FastWriter writer;
+
+    return writer.write(arr);
+}

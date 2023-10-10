@@ -11,7 +11,13 @@ public:
     virtual void Init(const IRequestHandlerContextPtr& context, const std::map<std::string, size_t> clients) = 0;
     virtual void SetRequestParameters(const std::vector<std::string>& params) = 0;
     virtual void ProcessRequest(const IRequestPtr& request, size_t& clientIndex) = 0;
-    virtual void ProcessResponse(const IResponsePtr& responseFromClient) = 0;
+
+    enum ResponceType
+    {
+        END_ROUTE,
+        REPEAT_ROUTE
+    };
+    virtual ResponceType ProcessResponse(const IResponsePtr& responseFromClient) = 0;
 
     enum RouteType
     {

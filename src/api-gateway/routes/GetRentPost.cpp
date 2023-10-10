@@ -41,7 +41,8 @@ void GetRentPost::ProcessRequest(const IRequestPtr &, size_t &)
     LoggerFactory::GetLogger()->LogError("GetRentPost::ProcessRequest unexpected call");
 }
 
-void GetRentPost::ProcessResponse(const IResponsePtr &)
+IClientServerRoute::ResponceType GetRentPost::ProcessResponse(const IResponsePtr &)
 {
     LoggerFactory::GetLogger()->LogError("GetRentPost::ProcessResponse unexpected call");
+    return IClientServerRoute::END_ROUTE;
 }

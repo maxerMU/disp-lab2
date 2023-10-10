@@ -65,3 +65,32 @@ std::string ToJSON(const RentsDTO &rents)
 
     return writer.write(arr);
 }
+
+RentsDTO FromJSON(const std::string & json)
+{
+    Json::Value values;
+    Json::Reader reader;
+
+    if (!reader.parse(json, values))
+    {
+        throw JsonParserException("can't parse RentsDTO object");
+    }
+
+    RentsDTO rents;
+    for (const auto& value : values)
+    {
+        RentDTO rent;
+        rent.id = value["id"].asUInt64();
+        rent.rentUid = value["rentalUid"].asString();
+        rent.username = value["username"].asString();
+        rent.paymentUid = value["paymentUid"].asString();
+        rent.carUid = value["carUid"].asString();
+        rent.dateFrom = value["dateFrom"].asString();
+        rent.dateTo = value["dateTo"].asString();
+        rent.status = value["status"].asString();
+
+        rents.push_back(rent);
+    }
+
+    return rents;
+}

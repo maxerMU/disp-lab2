@@ -32,3 +32,7 @@ public:
 
     auto operator<=>(const GetRentDTO &) const = default;
 };
+
+using GetRentsDTO = std::vector<GetRentDTO>;
+
+std::string ToJSON(const GetRentsDTO& rents);

@@ -27,12 +27,12 @@ void GetRentRoute::ProcessRequest(const IRequestPtr &request, size_t &clientInde
     request->SetTarget(GET_RENT_BASE_TARGET + "/" + rentUid);
 }
 
-void GetRentRoute::ProcessResponse(const IResponsePtr &responseFromClient)
+IClientServerRoute::ResponceType GetRentRoute::ProcessResponse(const IResponsePtr &responseFromClient)
 {
     if (responseFromClient->GetStatus() == net::CODE_404)
     {
         m_context->GetCurrentResponse()->SetStatus(net::CODE_404);
-        return;
+        return IClientServerRoute::END_ROUTE;
     }
 
     if (responseFromClient->GetStatus() != net::CODE_200)
@@ -42,4 +42,5 @@ void GetRentRoute::ProcessResponse(const IResponsePtr &responseFromClient)
     }
 
     m_context->GetProcessInfo().getRentRequest.rent.FromJSON(responseFromClient->GetBody());
+    return IClientServerRoute::END_ROUTE;
 }

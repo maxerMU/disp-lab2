@@ -23,7 +23,9 @@ void GetRentPrep::ProcessRequest(const IRequestPtr &, size_t &)
     LoggerFactory::GetLogger()->LogError("GetRentPrep::ProcessRequest unexpected call");
 }
 
-void GetRentPrep::ProcessResponse(const IResponsePtr &)
+IClientServerRoute::ResponceType GetRentPrep::ProcessResponse(const IResponsePtr &)
 {
     LoggerFactory::GetLogger()->LogError("GetRentPrep::ProcessResponse unexpected call");
+
+    return IClientServerRoute::END_ROUTE;
 }

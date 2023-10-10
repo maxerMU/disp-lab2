@@ -25,4 +25,5 @@ public:
 using RentsDTO = std::vector<RentDTO>;
 
 std::string ToJSON(const RentsDTO &Rents);
-std::string ToJSON(const RentsDTO &Rents, size_t page, size_t pageSize);
+
+RentsDTO FromJSON(const std::string& json);

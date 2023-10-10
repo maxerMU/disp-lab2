@@ -18,7 +18,8 @@ public:
     enum RequestType
     {
         Undefined,
-        GetRent
+        GetRent,
+        GetRents
     };
     RequestType GetRequestType() const;
     void SetRequestType(const RequestType& reqType);
@@ -33,6 +34,14 @@ public:
             CarDTO car;
             PaymentDTO payment;
         } getRentRequest;
+
+        struct GetRentsRequest
+        {
+            RentsDTO rents;
+            CarsDTO cars;
+            PaymentsDTO payments;
+        } getRentsRequest;
+        
     };
     RequestProcessInfo& GetProcessInfo();
     

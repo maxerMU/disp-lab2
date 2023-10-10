@@ -9,11 +9,12 @@ public:
     virtual void Init(const IRequestHandlerContextPtr &context, const std::map<std::string, size_t> clients) override;
     virtual void SetRequestParameters(const std::vector<std::string> &params) override;
     virtual void ProcessRequest(const IRequestPtr &request, size_t &clientIndex) override;
-    virtual void ProcessResponse(const IResponsePtr &responseFromClient) override;
+    virtual ResponceType ProcessResponse(const IResponsePtr &responseFromClient) override;
 
 private:
+    const std::string GET_PAYMENT_BASE_TARGET = "/api/v1/payments";
+
     ApiGatewayContextPtr m_context;
     std::map<std::string, size_t> m_clientsIndexes;
-
-    const std::string GET_PAYMENT_BASE_TARGET = "/api/v1/payments";
+    size_t m_iteration = 0;
 };
