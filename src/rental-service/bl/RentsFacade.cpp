@@ -3,6 +3,10 @@
 #include <exceptions/database_exceptions.h>
 #include <exceptions/logic_exceptions.h>
 
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
 std::shared_ptr<RentsFacade> RentsFacade::Instance()
 {
     static std::shared_ptr<RentsFacade> instance(new RentsFacade());
@@ -27,6 +31,30 @@ RentDTO RentsFacade::GetRent(const std::string &username, const std::string &ren
     {
         throw(RentNotFoundException(e.what()));
     }
+}
+
+RentDTO RentsFacade::AddRent(const PostRentDTO &postRent, const std::string &username)
+{
+    if (!m_repository)
+        throw NotInitializedException("repository doesn't initilized");
+
+    boost::uuids::random_generator gen;
+    boost::uuids::uuid uuid = gen();
+    std::string uuidStr = boost::uuids::to_string(uuid);
+
+    RentDTO rent{
+        uuidStr,
+        username,
+        postRent.paymentUid,
+        postRent.carUid,
+        postRent.dateFrom,
+        postRent.dateTo,
+        "IN_PROGRESS"
+    };
+
+    m_repository->AddRent(rent);
+
+    return rent;
 }
 
 RentsDTO RentsFacade::GetRents(const std::string& username) const

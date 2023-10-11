@@ -30,7 +30,6 @@ RentsDTO PostgresRentsRepository::GetRents(const std::string &username)
     for (const auto &row : rows)
     {
         RentDTO rent{
-            row["id"].as<size_t>(),
             row["rental_uid"].as<std::string>(),
             row["username"].as<std::string>(),
             row["payment_uid"].as<std::string>(),
@@ -64,7 +63,6 @@ RentDTO PostgresRentsRepository::GetRent(const std::string &username, const std:
         throw DatabaseNotFoundException("Rent not found");
 
     RentDTO rent{
-        rows[0]["id"].as<size_t>(),
         rows[0]["rental_uid"].as<std::string>(),
         rows[0]["username"].as<std::string>(),
         rows[0]["payment_uid"].as<std::string>(),
@@ -75,6 +73,20 @@ RentDTO PostgresRentsRepository::GetRent(const std::string &username, const std:
     };
 
     return rent;
+}
+
+void PostgresRentsRepository::AddRent(const RentDTO &rent)
+{
+    try
+    {
+        pqxx::work w(*m_connection);
+        w.exec_prepared(m_requestsNames[WRITE], rent.rentUid, rent.username, rent.paymentUid, rent.carUid, rent.dateFrom, rent.dateTo, rent.status);
+        w.commit();
+    }
+    catch (std::exception &ex)
+    {
+        throw DatabaseExecutionException(ex.what());
+    }
 }
 
 void PostgresRentsRepository::ReadConfig(const IConfigPtr &conf, const std::string &connectionSection)
@@ -110,4 +122,5 @@ void PostgresRentsRepository::AddPrepareStatements()
 {
     m_connection->prepare(m_requestsNames[READ_ALL], "SELECT * FROM rents WHERE username=$1");
     m_connection->prepare(m_requestsNames[READ], "SELECT * FROM rents WHERE username=$1 and rental_uid=$2");
+    m_connection->prepare(m_requestsNames[WRITE], "INSERT INTO rents(rental_uid, username, payment_uid, car_uid, date_from, date_to, status) VALUES ($1, $2, $3, $4, $5, $6, $7)");
 }

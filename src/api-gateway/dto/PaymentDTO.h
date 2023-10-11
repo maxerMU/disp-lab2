@@ -10,7 +10,6 @@ public:
     void FromJSON(const std::string &json);
     std::string ToJSON() const;
 
-    size_t id;
     std::string paymentUid;
     std::string status;
     size_t price;

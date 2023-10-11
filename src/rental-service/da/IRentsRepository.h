@@ -11,6 +11,7 @@ public:
 
     virtual RentsDTO GetRents(const std::string& username) = 0;
     virtual RentDTO GetRent(const std::string& username, const std::string& rentalUid) = 0;
+    virtual void AddRent(const RentDTO& rent) = 0;
 };
 
 using IRentsRepositoryPtr = std::shared_ptr<IRentsRepository>;

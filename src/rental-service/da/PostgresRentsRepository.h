@@ -13,6 +13,7 @@ public:
 
     virtual RentsDTO GetRents(const std::string& username) override;
     virtual RentDTO GetRent(const std::string& username, const std::string& rentalUid) override;
+    virtual void AddRent(const RentDTO& rent) override;
 
 private:
     void ReadConfig(const IConfigPtr &conf, const std::string &connectionSection);
@@ -31,9 +32,13 @@ private:
     enum PreparedRequests
     {
         READ,
-        READ_ALL
+        READ_ALL,
+        WRITE
     };
 
-    std::map<PreparedRequests, std::string> m_requestsNames = {{READ, "get_rent"},
-                                                               {READ_ALL, "get_all_rents"}};
+    std::map<PreparedRequests, std::string> m_requestsNames = {
+        {READ, "get_rent"},
+        {READ_ALL, "get_all_rents"},
+        {WRITE, "add_rent"}
+    };
 };

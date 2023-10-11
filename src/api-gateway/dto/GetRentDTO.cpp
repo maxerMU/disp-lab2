@@ -25,10 +25,10 @@ Json::Value GetJSON(const GetRentDTO &rent)
     root["dateTo"] = rent.dateTo;
 
     Json::Value car;
-    car["car_uid"] = rent.car.carUid;
+    car["carUid"] = rent.car.carUid;
     car["brand"] = rent.car.brand;
     car["model"] = rent.car.model;
-    car["registration_number"] = rent.car.registrationNumber;
+    car["registrationNumber"] = rent.car.registrationNumber;
 
     root["car"] = car;
 

@@ -4,6 +4,7 @@
 
 #include <da/IRentsRepository.h>
 #include <dto/RentDTO.h>
+#include <dto/PostRentDTO.h>
 
 class RentsFacade
 {
@@ -13,6 +14,7 @@ public:
 
     RentsDTO GetRents(const std::string& username) const;
     RentDTO GetRent(const std::string& username, const std::string& rentalUid) const;
+    RentDTO AddRent(const PostRentDTO& postRent, const std::string& username);
 
 private:
     RentsFacade() = default;

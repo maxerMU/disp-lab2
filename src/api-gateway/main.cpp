@@ -15,6 +15,11 @@
 #include "routes/GetRentPost.h"
 #include "routes/GetRentsPost.h"
 #include "routes/GetRentRoute.h"
+#include "routes/PostRentPrep.h"
+#include "routes/PostRentRoute.h"
+#include "routes/PostRentPost.h"
+#include "routes/PostPaymentRoute.h"
+#include "routes/UpdateCarAvailabilityRoute.h"
 
 void SetupRouter()
 {
@@ -39,6 +44,16 @@ void SetupRouter()
         std::make_shared<ClientServerRouteCreator<GetRentPost>>()
     };
     RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/rental/([0-9\\-a-z]+)"), net::GET}, getRentRoute);
+
+    std::vector<IClientServerRouteCreatorPtr> postRentRoute{
+        std::make_shared<ClientServerRouteCreator<PostRentPrep>>(),
+        std::make_shared<ClientServerRouteCreator<GetCarRoute>>(),
+        std::make_shared<ClientServerRouteCreator<UpdateCarAvailabilityRoute>>(),
+        std::make_shared<ClientServerRouteCreator<PostPaymentRoute>>(),
+        std::make_shared<ClientServerRouteCreator<PostRentRoute>>(),
+        std::make_shared<ClientServerRouteCreator<PostRentPost>>()
+    };
+    RequestsRouter::Instanse()->AddStaticEndpoint({"/api/v1/rental", net::POST}, postRentRoute);
 }
 
 int main(int argc, char *argv[])

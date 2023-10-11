@@ -2,8 +2,9 @@
 
 #include <memory>
 
-#include <da/IPaymentsRepository.h>
-#include <dto/PaymentDTO.h>
+#include "da/IPaymentsRepository.h"
+#include "dto/PaymentDTO.h"
+#include "dto/PostPaymentDTO.h"
 
 class PaymentsFacade
 {
@@ -12,6 +13,7 @@ public:
     void Init(const IPaymentsRepositoryPtr &repository);
 
     PaymentDTO GetPayment(const std::string& uid) const;
+    PaymentDTO AddPayment(const PostPaymentDTO& payment) const;
 
 private:
     PaymentsFacade() = default;

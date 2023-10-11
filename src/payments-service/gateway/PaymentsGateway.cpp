@@ -32,8 +32,19 @@ void GetPayment(const IResponsePtr &resp, const IRequestPtr &, const std::vector
     }
 }
 
+void AddRent(const IResponsePtr &resp, const IRequestPtr &request)
+{
+    PostPaymentDTO postPaymentDTO;
+    postPaymentDTO.FromJSON(request->GetBody());
+
+    PaymentDTO payment = PaymentsFacade::Instance()->AddPayment(postPaymentDTO);
+    resp->SetStatus(net::CODE_200);
+    resp->SetBody(payment.ToJSON());
+}
+
 void SetupRouter()
 {
     RequestsRouter::Instanse()->AddStaticEndpoint({"/manage/health", net::GET}, Health);
     RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/payments/([0-9\\-a-z]+)"), net::GET}, GetPayment);
+    RequestsRouter::Instanse()->AddStaticEndpoint({"/api/v1/payments", net::POST}, AddRent);
 }

@@ -11,6 +11,8 @@ target_sources( ${PROJECT_NAME} PRIVATE
 
     dto/RentDTO.h
     dto/RentDTO.cpp
+    dto/PostRentDTO.h
+    dto/PostRentDTO.cpp
 
     gateway/RentsServerHandler.h
     gateway/RentsServerHandler.cpp

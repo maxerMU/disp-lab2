@@ -21,8 +21,18 @@ target_sources( ${PROJECT_NAME} PRIVATE
   dto/GetRentDTO.cpp
   dto/PaymentDTO.h
   dto/PaymentDTO.cpp
+  dto/PostRentCarDTO.h
+  dto/PostRentCarDTO.cpp
+  dto/PostRentDTO.h
+  dto/PostRentDTO.cpp
+  dto/PostRentResultDTO.h
+  dto/PostRentResultDTO.cpp
+  dto/PostPaymentDTO.h
+  dto/PostPaymentDTO.cpp
   dto/RentDTO.h
   dto/RentDTO.cpp
+  dto/CarAvailabilityDTO.h
+  dto/CarAvailabilityDTO.cpp
 
   routes/GetRentPrep.h
   routes/GetRentPrep.cpp
@@ -42,6 +52,16 @@ target_sources( ${PROJECT_NAME} PRIVATE
   routes/GetRentRoute.cpp
   routes/GetRentsRoute.h
   routes/GetRentsRoute.cpp
+  routes/PostRentPrep.h
+  routes/PostRentPrep.cpp
+  routes/PostRentPost.h
+  routes/PostRentPost.cpp
+  routes/PostPaymentRoute.h
+  routes/PostPaymentRoute.cpp
+  routes/PostRentRoute.h
+  routes/PostRentRoute.cpp
+  routes/UpdateCarAvailabilityRoute.h
+  routes/UpdateCarAvailabilityRoute.cpp
 )
 
 target_include_directories(${PROJECT_NAME} 

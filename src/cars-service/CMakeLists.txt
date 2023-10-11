@@ -13,6 +13,8 @@ target_sources( ${PROJECT_NAME} PRIVATE
 
     dto/CarDTO.h
     dto/CarDTO.cpp
+    dto/CarAvailabilityDTO.h
+    dto/CarAvailabilityDTO.cpp
 
     gateway/CarsServerHandler.h
     gateway/CarsServerHandler.cpp

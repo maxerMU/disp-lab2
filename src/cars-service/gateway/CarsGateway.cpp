@@ -58,6 +58,22 @@ void GetCar(const IResponsePtr &resp, const IRequestPtr &, const std::vector<std
     }
 }
 
+void UpdateCarAvailability(const IResponsePtr &resp, const IRequestPtr &request)
+{
+    try
+    {
+        CarAvailabilityDTO car;
+        car.FromJSON(request->GetBody());
+        CarsFacade::Instance()->UpdateCarAvailability(car);
+        resp->SetStatus(net::CODE_200);
+    }
+    catch(const CarNotFoundException& e)
+    {
+        resp->SetBody(e.what());
+        resp->SetStatus(net::CODE_404);
+    }
+}
+
 void SetupRouter()
 {
     RequestsRouter::Instanse()->AddStaticEndpoint({"/manage/health", net::GET}, Health);
@@ -66,4 +82,6 @@ void SetupRouter()
     RequestsRouter::Instanse()->AddDynamicEndpoint({getCarsTarget, net::GET}, GetCars);
 
     RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/cars/([0-9\\-a-z]+)"), net::GET}, GetCar);
+
+    RequestsRouter::Instanse()->AddStaticEndpoint({"/api/v1/cars", net::PATCH}, UpdateCarAvailability);
 }

@@ -11,6 +11,8 @@ target_sources( ${PROJECT_NAME} PRIVATE
 
     dto/PaymentDTO.h
     dto/PaymentDTO.cpp
+    dto/PostPaymentDTO.h
+    dto/PostPaymentDTO.cpp
 
     gateway/PaymentsServerHandler.h
     gateway/PaymentsServerHandler.cpp

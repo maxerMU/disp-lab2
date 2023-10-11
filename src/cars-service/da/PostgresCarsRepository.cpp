@@ -115,6 +115,20 @@ CarDTO PostgresCarsRepository::GetCar(const std::string& carUid)
     return car;
 }
 
+void PostgresCarsRepository::UpdateCarAvailability(const std::string &carUid, bool available)
+{
+    try
+    {
+        pqxx::work w(*m_connection);
+        w.exec_prepared(m_requestsNames[UPDATE_CAR_AVALABILITY], carUid, available);
+        w.commit();
+    }
+    catch (std::exception &ex)
+    {
+        throw DatabaseExecutionException(ex.what());
+    }
+}
+
 void PostgresCarsRepository::ReadConfig(const IConfigPtr &conf, const std::string &connectionSection)
 {
     m_name = conf->GetStringField({connectionSection, DbNameSection});
@@ -149,4 +163,5 @@ void PostgresCarsRepository::AddPrepareStatements()
     m_connection->prepare(m_requestsNames[READ_ALL], "SELECT * FROM cars");
     m_connection->prepare(m_requestsNames[READ_AVAILABLE], "SELECT * FROM cars WHERE availability=true");
     m_connection->prepare(m_requestsNames[READ_BY_UID], "SELECT * FROM cars WHERE car_uid=$1");
+    m_connection->prepare(m_requestsNames[UPDATE_CAR_AVALABILITY], "UPDATE cars SET availability=$2 WHERE car_uid=$1");
 }

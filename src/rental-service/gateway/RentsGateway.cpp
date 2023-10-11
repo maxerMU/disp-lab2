@@ -10,18 +10,28 @@ void Health(const IResponsePtr &resp, const IRequestPtr &)
     resp->SetStatus(net::CODE_200);
 }
 
-void GetRents(const IResponsePtr &resp, const IRequestPtr &request)
+std::string GetUsername(const IRequestPtr &request)
 {
     headers_t headers = request->GetHeaders();
     auto it = headers.find("X-User-Name");
-    if (it == headers.end())
+    if (it != headers.end())
+    {
+        return it->second;
+    }
+
+    return {};
+}
+
+void GetRents(const IResponsePtr &resp, const IRequestPtr &request)
+{
+    std::string username = GetUsername(request);
+    if (username.empty())
     {
         LoggerFactory::GetLogger()->LogError("header X-User-Name not found");
         resp->SetStatus(net::CODE_400);
         return;
     }
 
-    std::string username = it->second;
     RentsDTO rents = RentsFacade::Instance()->GetRents(username);
     resp->SetBody(ToJSON(rents));
     resp->SetStatus(net::CODE_200);
@@ -36,16 +46,13 @@ void GetRent(const IResponsePtr &resp, const IRequestPtr &request, const std::ve
         return;
     }
 
-    headers_t headers = request->GetHeaders();
-    auto it = headers.find("X-User-Name");
-    if (it == headers.end())
+    std::string username = GetUsername(request);
+    if (username.empty())
     {
         LoggerFactory::GetLogger()->LogError("header X-User-Name not found");
         resp->SetStatus(net::CODE_400);
         return;
     }
-
-    std::string username = it->second;
 
     try
     {
@@ -59,9 +66,28 @@ void GetRent(const IResponsePtr &resp, const IRequestPtr &request, const std::ve
     }
 }
 
+void AddRent(const IResponsePtr &resp, const IRequestPtr &request)
+{
+    std::string username = GetUsername(request);
+    if (username.empty())
+    {
+        LoggerFactory::GetLogger()->LogError("header X-User-Name not found");
+        resp->SetStatus(net::CODE_400);
+        return;
+    }
+
+    PostRentDTO postRent;
+    postRent.FromJSON(request->GetBody());
+    RentDTO rent = RentsFacade::Instance()->AddRent(postRent, username);
+
+    resp->SetBody(rent.ToJSON());
+    resp->SetStatus(net::CODE_200);
+}
+
 void SetupRouter()
 {
     RequestsRouter::Instanse()->AddStaticEndpoint({"/manage/health", net::GET}, Health);
     RequestsRouter::Instanse()->AddStaticEndpoint({"/api/v1/rental", net::GET}, GetRents);
     RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/rental/([0-9\\-a-z]+)"), net::GET}, GetRent);
+    RequestsRouter::Instanse()->AddStaticEndpoint({"/api/v1/rental", net::POST}, AddRent);
 }

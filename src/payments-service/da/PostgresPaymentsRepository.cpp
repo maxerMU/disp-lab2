@@ -29,13 +29,26 @@ PaymentDTO PostgresPaymentsRepository::GetPayment(const std::string &uid)
         throw DatabaseNotFoundException("payment not found");
 
     PaymentDTO payment{
-        rows[0]["id"].as<size_t>(),
         rows[0]["payment_uid"].as<std::string>(),
         rows[0]["status"].as<std::string>(),
         rows[0]["price"].as<size_t>(),
     };
 
     return payment;
+}
+
+void PostgresPaymentsRepository::AddPayment(const std::string &paymentUid, size_t price)
+{
+    try
+    {
+        pqxx::work w(*m_connection);
+        w.exec_prepared(m_requestsNames[WRITE], paymentUid, price);
+        w.commit();
+    }
+    catch (std::exception &ex)
+    {
+        throw DatabaseExecutionException(ex.what());
+    }
 }
 
 void PostgresPaymentsRepository::ReadConfig(const IConfigPtr &conf, const std::string &connectionSection)
@@ -70,4 +83,5 @@ void PostgresPaymentsRepository::Connect()
 void PostgresPaymentsRepository::AddPrepareStatements()
 {
     m_connection->prepare(m_requestsNames[READ], "SELECT * FROM payment WHERE payment_uid=$1");
+    m_connection->prepare(m_requestsNames[WRITE], "INSERT INTO payment(payment_uid, status, price) VALUES ($1, \'PAID\', $2)");
 }

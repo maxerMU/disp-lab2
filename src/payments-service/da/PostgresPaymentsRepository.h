@@ -12,6 +12,7 @@ public:
     PostgresPaymentsRepository(const IConfigPtr &conf, const std::string &connectionSection);
 
     virtual PaymentDTO GetPayment(const std::string &uid) override;
+    virtual void AddPayment(const std::string &paymentUid, size_t price) override;
 
 private:
     void ReadConfig(const IConfigPtr &conf, const std::string &connectionSection);
@@ -29,10 +30,12 @@ private:
 
     enum PreparedRequests
     {
-        READ
+        READ,
+        WRITE
     };
 
     std::map<PreparedRequests, std::string> m_requestsNames = {
-        {READ, "get_payment"}
+        {READ, "get_payment"},
+        {WRITE, "add_payment"}
     };
 };

@@ -28,11 +28,13 @@ void GetCarRoute::ProcessRequest(const IRequestPtr &request, size_t &clientIndex
         carUid = m_context->GetProcessInfo().getRentRequest.rent.carUid;
     else if (m_context->GetRequestType() == ApiGatewayContext::GetRents)
         carUid = m_context->GetProcessInfo().getRentsRequest.rents[m_iteration].carUid;
+    else if (m_context->GetRequestType() == ApiGatewayContext::PostRent)
+        carUid = m_context->GetProcessInfo().postRentRequest.postRent.carUid;
     
     if (carUid.empty())
         throw UndefinedCarUidException("get car route");
 
-    request->copy(m_context->GetCurrentRequest());
+    request->SetMethod(net::GET);
     request->SetTarget(GET_CAR_BASE_TARGET + "/" + carUid);
 }
 
@@ -64,6 +66,17 @@ IClientServerRoute::ResponceType GetCarRoute::ProcessResponse(const IResponsePtr
         m_iteration++;
         if (m_iteration < m_context->GetProcessInfo().getRentsRequest.rents.size())
             return IClientServerRoute::REPEAT_ROUTE;
+    }
+    else if (m_context->GetRequestType() == ApiGatewayContext::PostRent)
+    {
+        if (!car.availability)
+        {
+            m_context->GetCurrentResponse()->SetStatus(net::CODE_400);
+            m_context->GetCurrentResponse()->SetBody("car not available");
+            return IClientServerRoute::END_ROUTE;
+        }
+        m_context->GetProcessInfo().postRentRequest.car = car;
+        return IClientServerRoute::END_ROUTE;
     }
 
     return IClientServerRoute::END_ROUTE;

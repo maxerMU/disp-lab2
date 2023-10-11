@@ -5,6 +5,7 @@
 #include "dto/RentDTO.h"
 #include "dto/CarDTO.h"
 #include "dto/PaymentDTO.h"
+#include "dto/PostRentCarDTO.h"
 
 class ApiGatewayContext 
     : public IRequestHandlerContext
@@ -19,7 +20,8 @@ public:
     {
         Undefined,
         GetRent,
-        GetRents
+        GetRents,
+        PostRent
     };
     RequestType GetRequestType() const;
     void SetRequestType(const RequestType& reqType);
@@ -41,6 +43,14 @@ public:
             CarsDTO cars;
             PaymentsDTO payments;
         } getRentsRequest;
+        
+        struct PostRentRequest
+        {
+            PostRentCarDTO postRent;
+            CarDTO car;
+            PaymentDTO payment;
+            RentDTO rent;
+        } postRentRequest;
         
     };
     RequestProcessInfo& GetProcessInfo();
