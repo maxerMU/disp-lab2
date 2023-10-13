@@ -22,8 +22,14 @@ void GetRentRoute::ProcessRequest(const IRequestPtr &request, size_t &clientInde
 {
     clientIndex = m_clientsIndexes[RENTS_CLIENT];
 
-    const std::string rentUid = m_context->GetProcessInfo().getRentRequest.rentUid;
-    request->copy(m_context->GetCurrentRequest());
+    std::string rentUid;
+    if (m_context->GetRequestType() == ApiGatewayContext::GetRent)
+        rentUid = m_context->GetProcessInfo().getRentRequest.rentUid;
+    else if (m_context->GetRequestType() == ApiGatewayContext::FinishRent)
+        rentUid = m_context->GetProcessInfo().finishRentRequest.rentUid;
+
+    request->SetHeaders(m_context->GetCurrentRequest()->GetHeaders());
+    request->SetMethod(net::GET);
     request->SetTarget(GET_RENT_BASE_TARGET + "/" + rentUid);
 }
 
@@ -41,6 +47,13 @@ IClientServerRoute::ResponceType GetRentRoute::ProcessResponse(const IResponsePt
         throw ProcessingResponseException("get rent route invalid code");
     }
 
-    m_context->GetProcessInfo().getRentRequest.rent.FromJSON(responseFromClient->GetBody());
+    RentDTO rent;
+    rent.FromJSON(responseFromClient->GetBody());
+
+    if (m_context->GetRequestType() == ApiGatewayContext::GetRent)
+        m_context->GetProcessInfo().getRentRequest.rent = rent;
+    else if (m_context->GetRequestType() == ApiGatewayContext::FinishRent)
+        m_context->GetProcessInfo().finishRentRequest.rent = rent;
+
     return IClientServerRoute::END_ROUTE;
 }

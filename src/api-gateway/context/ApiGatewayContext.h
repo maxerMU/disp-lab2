@@ -21,7 +21,8 @@ public:
         Undefined,
         GetRent,
         GetRents,
-        PostRent
+        PostRent,
+        FinishRent
     };
     RequestType GetRequestType() const;
     void SetRequestType(const RequestType& reqType);
@@ -51,6 +52,12 @@ public:
             PaymentDTO payment;
             RentDTO rent;
         } postRentRequest;
+        
+        struct FinishRentRequest
+        {
+            std::string rentUid;
+            RentDTO rent;
+        } finishRentRequest;
         
     };
     RequestProcessInfo& GetProcessInfo();

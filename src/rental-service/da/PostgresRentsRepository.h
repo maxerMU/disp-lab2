@@ -14,6 +14,7 @@ public:
     virtual RentsDTO GetRents(const std::string& username) override;
     virtual RentDTO GetRent(const std::string& username, const std::string& rentalUid) override;
     virtual void AddRent(const RentDTO& rent) override;
+    virtual void UpdateRentStatus(const std::string& username, const std::string& rentalUid, const std::string& status) override;
 
 private:
     void ReadConfig(const IConfigPtr &conf, const std::string &connectionSection);
@@ -33,12 +34,14 @@ private:
     {
         READ,
         READ_ALL,
-        WRITE
+        WRITE,
+        UPDATE
     };
 
     std::map<PreparedRequests, std::string> m_requestsNames = {
         {READ, "get_rent"},
         {READ_ALL, "get_all_rents"},
-        {WRITE, "add_rent"}
+        {WRITE, "add_rent"},
+        {UPDATE, "update_rent"},
     };
 };

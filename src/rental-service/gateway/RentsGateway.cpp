@@ -84,10 +84,68 @@ void AddRent(const IResponsePtr &resp, const IRequestPtr &request)
     resp->SetStatus(net::CODE_200);
 }
 
+void FinishRent(const IResponsePtr &resp, const IRequestPtr &request, const std::vector<std::string>& params)
+{
+    if (params.size() != 1)
+    {
+        LoggerFactory::GetLogger()->LogError("Get rent incorrect params number");
+        resp->SetStatus(net::CODE_400);
+        return;
+    }
+
+    std::string username = GetUsername(request);
+    if (username.empty())
+    {
+        LoggerFactory::GetLogger()->LogError("header X-User-Name not found");
+        resp->SetStatus(net::CODE_400);
+        return;
+    }
+
+    try
+    {
+        RentsFacade::Instance()->FinishRent(username, params[0]);
+        resp->SetStatus(net::CODE_200);
+    }
+    catch(const RentNotFoundException&)
+    {
+        resp->SetStatus(net::CODE_404);
+    }
+}
+
+void CancelRent(const IResponsePtr &resp, const IRequestPtr &request, const std::vector<std::string>& params)
+{
+    if (params.size() != 1)
+    {
+        LoggerFactory::GetLogger()->LogError("Get rent incorrect params number");
+        resp->SetStatus(net::CODE_400);
+        return;
+    }
+
+    std::string username = GetUsername(request);
+    if (username.empty())
+    {
+        LoggerFactory::GetLogger()->LogError("header X-User-Name not found");
+        resp->SetStatus(net::CODE_400);
+        return;
+    }
+
+    try
+    {
+        RentsFacade::Instance()->CancelRent(username, params[0]);
+        resp->SetStatus(net::CODE_200);
+    }
+    catch(const RentNotFoundException&)
+    {
+        resp->SetStatus(net::CODE_404);
+    }
+}
+
 void SetupRouter()
 {
     RequestsRouter::Instanse()->AddStaticEndpoint({"/manage/health", net::GET}, Health);
     RequestsRouter::Instanse()->AddStaticEndpoint({"/api/v1/rental", net::GET}, GetRents);
     RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/rental/([0-9\\-a-z]+)"), net::GET}, GetRent);
     RequestsRouter::Instanse()->AddStaticEndpoint({"/api/v1/rental", net::POST}, AddRent);
+    RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/rental/([0-9\\-a-z]+)/finish"), net::POST}, FinishRent);
+    RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/rental/([0-9\\-a-z]+)"), net::DELETE}, CancelRent);
 }

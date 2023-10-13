@@ -7,6 +7,9 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
+#define FINISHED_RENT_STATUS "FINISHED"
+#define CANCELED_RENT_STATUS "CANCELED"
+
 std::shared_ptr<RentsFacade> RentsFacade::Instance()
 {
     static std::shared_ptr<RentsFacade> instance(new RentsFacade());
@@ -55,6 +58,31 @@ RentDTO RentsFacade::AddRent(const PostRentDTO &postRent, const std::string &use
     m_repository->AddRent(rent);
 
     return rent;
+}
+
+void RentsFacade::FinishRent(const std::string &username, const std::string &rentalUid)
+{
+    UpdateRent(username, rentalUid, FINISHED_RENT_STATUS);
+}
+
+void RentsFacade::CancelRent(const std::string &username, const std::string &rentalUid)
+{
+    UpdateRent(username, rentalUid, CANCELED_RENT_STATUS);
+}
+
+void RentsFacade::UpdateRent(const std::string &username, const std::string &rentalUid, const std::string &status)
+{
+    if (!m_repository)
+        throw NotInitializedException("repository doesn't initilized");
+    
+    try
+    {
+        m_repository->UpdateRentStatus(username, rentalUid, status);
+    }
+    catch(const DatabaseNotFoundException &e)
+    {
+        throw(RentNotFoundException(e.what()));
+    }
 }
 
 RentsDTO RentsFacade::GetRents(const std::string& username) const

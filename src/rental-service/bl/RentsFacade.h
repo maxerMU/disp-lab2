@@ -15,9 +15,12 @@ public:
     RentsDTO GetRents(const std::string& username) const;
     RentDTO GetRent(const std::string& username, const std::string& rentalUid) const;
     RentDTO AddRent(const PostRentDTO& postRent, const std::string& username);
+    void FinishRent(const std::string& username, const std::string& rentalUid);
+    void CancelRent(const std::string& username, const std::string& rentalUid);
 
 private:
     RentsFacade() = default;
+    void UpdateRent(const std::string& username, const std::string& rentalUid, const std::string& status);
 
     IRentsRepositoryPtr m_repository;
 };

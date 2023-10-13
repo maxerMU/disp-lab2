@@ -60,6 +60,10 @@ target_sources( ${PROJECT_NAME} PRIVATE
   routes/PostPaymentRoute.cpp
   routes/PostRentRoute.h
   routes/PostRentRoute.cpp
+  routes/FinishRentPrep.h
+  routes/FinishRentPrep.cpp
+  routes/FinishRentRoute.h
+  routes/FinishRentRoute.cpp
   routes/UpdateCarAvailabilityRoute.h
   routes/UpdateCarAvailabilityRoute.cpp
 )

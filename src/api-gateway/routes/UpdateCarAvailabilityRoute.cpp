@@ -31,6 +31,11 @@ void UpdateCarAvailabilityRoute::ProcessRequest(const IRequestPtr &request, size
         carUid = m_context->GetProcessInfo().postRentRequest.car.carUid;
         availability = false;
     }
+    else if (m_context->GetRequestType() == ApiGatewayContext::FinishRent)
+    {
+        carUid = m_context->GetProcessInfo().finishRentRequest.rent.carUid;
+        availability = true;
+    }
     
     if (carUid.empty())
         throw UndefinedCarUidException("get car route");

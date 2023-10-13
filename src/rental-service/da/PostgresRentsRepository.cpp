@@ -89,6 +89,20 @@ void PostgresRentsRepository::AddRent(const RentDTO &rent)
     }
 }
 
+void PostgresRentsRepository::UpdateRentStatus(const std::string &username, const std::string &rentalUid, const std::string& status)
+{
+    try
+    {
+        pqxx::work w(*m_connection);
+        w.exec_prepared(m_requestsNames[UPDATE], username, rentalUid, status);
+        w.commit();
+    }
+    catch (std::exception &ex)
+    {
+        throw DatabaseExecutionException(ex.what());
+    }
+}
+
 void PostgresRentsRepository::ReadConfig(const IConfigPtr &conf, const std::string &connectionSection)
 {
     m_name = conf->GetStringField({connectionSection, DbNameSection});
@@ -123,4 +137,5 @@ void PostgresRentsRepository::AddPrepareStatements()
     m_connection->prepare(m_requestsNames[READ_ALL], "SELECT * FROM rents WHERE username=$1");
     m_connection->prepare(m_requestsNames[READ], "SELECT * FROM rents WHERE username=$1 and rental_uid=$2");
     m_connection->prepare(m_requestsNames[WRITE], "INSERT INTO rents(rental_uid, username, payment_uid, car_uid, date_from, date_to, status) VALUES ($1, $2, $3, $4, $5, $6, $7)");
+    m_connection->prepare(m_requestsNames[UPDATE], "UPDATE rents SET status=$3 WHERE username=$1 and rental_uid=$2");
 }
