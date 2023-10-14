@@ -66,6 +66,12 @@ target_sources( ${PROJECT_NAME} PRIVATE
   routes/FinishRentRoute.cpp
   routes/UpdateCarAvailabilityRoute.h
   routes/UpdateCarAvailabilityRoute.cpp
+  routes/CancelRentPrep.h
+  routes/CancelRentPrep.cpp
+  routes/CancelRentRoute.h
+  routes/CancelRentRoute.cpp
+  routes/CancelPaymentRoute.h
+  routes/CancelPaymentRoute.cpp
 )
 
 target_include_directories(${PROJECT_NAME} 

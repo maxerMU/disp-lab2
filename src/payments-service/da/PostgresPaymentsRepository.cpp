@@ -37,12 +37,26 @@ PaymentDTO PostgresPaymentsRepository::GetPayment(const std::string &uid)
     return payment;
 }
 
-void PostgresPaymentsRepository::AddPayment(const std::string &paymentUid, size_t price)
+void PostgresPaymentsRepository::AddPayment(const PaymentDTO &payment)
 {
     try
     {
         pqxx::work w(*m_connection);
-        w.exec_prepared(m_requestsNames[WRITE], paymentUid, price);
+        w.exec_prepared(m_requestsNames[WRITE], payment.paymentUid, payment.status, payment.price);
+        w.commit();
+    }
+    catch (std::exception &ex)
+    {
+        throw DatabaseExecutionException(ex.what());
+    }
+}
+
+void PostgresPaymentsRepository::UpdatePayment(const std::string &paymentUid, const std::string &status)
+{
+    try
+    {
+        pqxx::work w(*m_connection);
+        w.exec_prepared(m_requestsNames[UPDATE], paymentUid, status);
         w.commit();
     }
     catch (std::exception &ex)
@@ -83,5 +97,6 @@ void PostgresPaymentsRepository::Connect()
 void PostgresPaymentsRepository::AddPrepareStatements()
 {
     m_connection->prepare(m_requestsNames[READ], "SELECT * FROM payment WHERE payment_uid=$1");
-    m_connection->prepare(m_requestsNames[WRITE], "INSERT INTO payment(payment_uid, status, price) VALUES ($1, \'PAID\', $2)");
+    m_connection->prepare(m_requestsNames[WRITE], "INSERT INTO payment(payment_uid, status, price) VALUES ($1, $2, $3)");
+    m_connection->prepare(m_requestsNames[UPDATE], "UPDATE payment SET status=$2 where payment_uid=$1");
 }

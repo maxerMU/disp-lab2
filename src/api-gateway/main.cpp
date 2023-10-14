@@ -22,6 +22,9 @@
 #include "routes/UpdateCarAvailabilityRoute.h"
 #include "routes/FinishRentPrep.h"
 #include "routes/FinishRentRoute.h"
+#include "routes/CancelRentPrep.h"
+#include "routes/CancelRentRoute.h"
+#include "routes/CancelPaymentRoute.h"
 
 void SetupRouter()
 {
@@ -64,6 +67,15 @@ void SetupRouter()
         std::make_shared<ClientServerRouteCreator<FinishRentRoute>>()
     };
     RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/rental/([0-9\\-a-z]+)/finish"), net::POST}, finishRentRoute);
+
+    std::vector<IClientServerRouteCreatorPtr> cancelRentRoute{
+        std::make_shared<ClientServerRouteCreator<CancelRentPrep>>(),
+        std::make_shared<ClientServerRouteCreator<GetRentRoute>>(),
+        std::make_shared<ClientServerRouteCreator<UpdateCarAvailabilityRoute>>(),
+        std::make_shared<ClientServerRouteCreator<CancelRentRoute>>(),
+        std::make_shared<ClientServerRouteCreator<CancelPaymentRoute>>()
+    };
+    RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/rental/([0-9\\-a-z]+)"), net::DELETE}, cancelRentRoute);
 }
 
 int main(int argc, char *argv[])

@@ -22,7 +22,8 @@ public:
         GetRent,
         GetRents,
         PostRent,
-        FinishRent
+        FinishRent,
+        CancelRent
     };
     RequestType GetRequestType() const;
     void SetRequestType(const RequestType& reqType);
@@ -59,6 +60,11 @@ public:
             RentDTO rent;
         } finishRentRequest;
         
+        struct CancelRentRequest
+        {
+            std::string rentUid;
+            RentDTO rent;
+        } cancelRentRequest;
     };
     RequestProcessInfo& GetProcessInfo();
     

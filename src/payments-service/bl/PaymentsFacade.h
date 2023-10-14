@@ -14,6 +14,7 @@ public:
 
     PaymentDTO GetPayment(const std::string& uid) const;
     PaymentDTO AddPayment(const PostPaymentDTO& payment) const;
+    void CancelPayment(const std::string& uid) const;
 
 private:
     PaymentsFacade() = default;

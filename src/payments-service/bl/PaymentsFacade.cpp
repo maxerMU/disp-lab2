@@ -7,6 +7,9 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
+#define PAID_PAYMENT_STATUS "PAID"
+#define CANCELED_PAYMENT_STATUS "CANCELED"
+
 std::shared_ptr<PaymentsFacade> PaymentsFacade::Instance()
 {
     static std::shared_ptr<PaymentsFacade> instance(new PaymentsFacade());
@@ -42,7 +45,16 @@ PaymentDTO PaymentsFacade::AddPayment(const PostPaymentDTO &payment) const
     boost::uuids::uuid uuid = gen();
 
     std::string uuidStr = boost::uuids::to_string(uuid);
-    m_repository->AddPayment(uuidStr, payment.price);
+    PaymentDTO paymentResult{uuidStr, PAID_PAYMENT_STATUS, payment.price};
+    m_repository->AddPayment(paymentResult);
 
-    return {uuidStr, "PAID", payment.price};
+    return paymentResult;
+}
+
+void PaymentsFacade::CancelPayment(const std::string &uid) const
+{
+    if (!m_repository)
+        throw NotInitializedException("repository doesn't initilized");
+    
+    m_repository->UpdatePayment(uid, CANCELED_PAYMENT_STATUS);
 }

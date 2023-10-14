@@ -32,7 +32,7 @@ void GetPayment(const IResponsePtr &resp, const IRequestPtr &, const std::vector
     }
 }
 
-void AddRent(const IResponsePtr &resp, const IRequestPtr &request)
+void AddPayment(const IResponsePtr &resp, const IRequestPtr &request)
 {
     PostPaymentDTO postPaymentDTO;
     postPaymentDTO.FromJSON(request->GetBody());
@@ -42,9 +42,23 @@ void AddRent(const IResponsePtr &resp, const IRequestPtr &request)
     resp->SetBody(payment.ToJSON());
 }
 
+void CancelPayment(const IResponsePtr &resp, const IRequestPtr &, const std::vector<std::string>& params)
+{
+    if (params.size() != 1)
+    {
+        LoggerFactory::GetLogger()->LogError("get payment incorrect params count");
+        resp->SetStatus(net::CODE_400);
+        return;
+    }
+
+    PaymentsFacade::Instance()->CancelPayment(params[0]);
+    resp->SetStatus(net::CODE_200);
+}
+
 void SetupRouter()
 {
     RequestsRouter::Instanse()->AddStaticEndpoint({"/manage/health", net::GET}, Health);
     RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/payments/([0-9\\-a-z]+)"), net::GET}, GetPayment);
-    RequestsRouter::Instanse()->AddStaticEndpoint({"/api/v1/payments", net::POST}, AddRent);
+    RequestsRouter::Instanse()->AddStaticEndpoint({"/api/v1/payments", net::POST}, AddPayment);
+    RequestsRouter::Instanse()->AddDynamicEndpoint({std::regex("/api/v1/payments/([0-9\\-a-z]+)"), net::DELETE}, CancelPayment);
 }

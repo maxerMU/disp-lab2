@@ -27,6 +27,8 @@ void GetRentRoute::ProcessRequest(const IRequestPtr &request, size_t &clientInde
         rentUid = m_context->GetProcessInfo().getRentRequest.rentUid;
     else if (m_context->GetRequestType() == ApiGatewayContext::FinishRent)
         rentUid = m_context->GetProcessInfo().finishRentRequest.rentUid;
+    else if (m_context->GetRequestType() == ApiGatewayContext::CancelRent)
+        rentUid = m_context->GetProcessInfo().cancelRentRequest.rentUid;
 
     request->SetHeaders(m_context->GetCurrentRequest()->GetHeaders());
     request->SetMethod(net::GET);
@@ -54,6 +56,8 @@ IClientServerRoute::ResponceType GetRentRoute::ProcessResponse(const IResponsePt
         m_context->GetProcessInfo().getRentRequest.rent = rent;
     else if (m_context->GetRequestType() == ApiGatewayContext::FinishRent)
         m_context->GetProcessInfo().finishRentRequest.rent = rent;
+    else if (m_context->GetRequestType() == ApiGatewayContext::CancelRent)
+        m_context->GetProcessInfo().cancelRentRequest.rent = rent;
 
     return IClientServerRoute::END_ROUTE;
 }
