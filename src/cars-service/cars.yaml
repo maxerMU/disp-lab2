@@ -5,7 +5,7 @@ DB_CARS:
         DB_NAME: "cars"
         DB_USER: "postgres"
         DB_USER_PASSWORD: "postgres"
-        DB_HOST: "127.0.0.1"
+        DB_HOST: "postgres"
         DB_PORT: 5432
 
 LogFile: "stdout"

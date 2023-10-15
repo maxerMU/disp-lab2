@@ -67,24 +67,3 @@ std::string ToJSON(const CarsDTO &cars)
 
     return writer.write(arr);
 }
-
-std::string ToJSON(const CarsDTO &cars, size_t page, size_t pageSize)
-{
-    Json::Value root;
-
-    root["page"] = page;
-    root["pageSize"] = pageSize;
-    root["totalElements"] = cars.size();
-
-    Json::Value items = Json::arrayValue;
-    for (auto car : cars)
-    {
-        Json::Value val = GetJSON(car);
-        items.append(val);
-    }
-
-    root["items"] = items;
-
-    Json::FastWriter writer;
-    return writer.write(root);
-}

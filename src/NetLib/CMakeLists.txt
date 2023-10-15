@@ -2,7 +2,7 @@ project( NetLib CXX )
 
 add_subdirectory( demo )
 
-add_library( ${PROJECT_NAME} SHARED )
+add_library( ${PROJECT_NAME} STATIC )
 
 target_compile_options( ${PROJECT_NAME} PUBLIC -fcoroutines)
 

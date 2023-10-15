@@ -51,7 +51,7 @@ IClientServerRoute::ResponceType PostPaymentRoute::ProcessResponse(const IRespon
 size_t PostPaymentRoute::CalculatePrice()
 {
     std::string dateFrom, dateTo;
-    size_t pricePerDay;
+    size_t pricePerDay = 1;
 
     if (m_context->GetRequestType() == ApiGatewayContext::PostRent)
     {

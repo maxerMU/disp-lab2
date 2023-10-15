@@ -31,10 +31,12 @@ std::vector<std::shared_ptr<tcp::socket>> ClientServerConnection::ConnetClientSo
 
         std::string host = config->GetStringField({client, ClientHostSection});
         int port = config->GetIntField({client, ClientPortSection});
-        tcp::endpoint ep(asio::ip::address::from_string(host), port);
+        asio::ip::tcp::resolver resolver(m_context);
+        auto results = resolver.resolve(host, std::to_string(port));
+        // tcp::endpoint ep(asio::ip::address::from_string(host), port);
 
         std::shared_ptr<tcp::socket> client_sock(new tcp::socket(m_context));
-        client_sock->connect(ep);
+        asio::connect(*client_sock, results.begin(), results.end());
 
         client_sockets.push_back(client_sock);
         LoggerFactory::GetLogger()->LogInfo("Connected");

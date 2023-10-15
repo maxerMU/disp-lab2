@@ -4,15 +4,15 @@ Clients:
         - Payments
 
 Cars:
-        Host: "127.0.0.1"
+        Host: "cars-service"
         Port: 8070
 
 Rents:
-        Host: "127.0.0.1"
+        Host: "rental-service"
         Port: 8060
 
 Payments:
-        Host: "127.0.0.1"
+        Host: "payments-service"
         Port: 8050
 
 Server:

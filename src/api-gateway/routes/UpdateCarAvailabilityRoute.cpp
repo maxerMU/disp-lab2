@@ -25,7 +25,7 @@ void UpdateCarAvailabilityRoute::ProcessRequest(const IRequestPtr &request, size
     clientIndex = m_clientsIndexes[CARS_CLIENT];
 
     std::string carUid;
-    bool availability;
+    bool availability = false;
     if (m_context->GetRequestType() == ApiGatewayContext::PostRent)
     {
         carUid = m_context->GetProcessInfo().postRentRequest.car.carUid;
