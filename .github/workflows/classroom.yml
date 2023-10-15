@@ -27,10 +27,14 @@ jobs:
           docker-compose build cars-service
 
       - name: Run containers
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: |
-          docker compose up -d
-          ./scripts/wait-script.sh
+          docker-compose up -d postgres
+          docker-compose up -d rental-service
+          docker-compose up -d payments-service
+          docker-compose up -d cars-service
+          docker-compose up -d api-gateway
+          # ./scripts/wait-script.sh
         env:
           WAIT_PORTS: 8080,8070,8060,8050
 
