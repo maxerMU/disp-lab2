@@ -16,7 +16,7 @@ void PaymentDTO::FromJSON(const std::string &json)
         throw JsonParserException("can't parse PaymentDTO object");
     }
 
-    paymentUid = value["paymentalUid"].asString();
+    paymentUid = value["paymentUid"].asString();
     status = value["status"].asString();
     price = value["price"].asUInt64();
 }
@@ -25,7 +25,7 @@ Json::Value GetJSON(const PaymentDTO &payment)
 {
     Json::Value root;
 
-    root["paymentalUid"] = payment.paymentUid;
+    root["paymentUid"] = payment.paymentUid;
     root["status"] = payment.status;
     root["price"] = (uint)payment.price;
 

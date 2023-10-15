@@ -10,7 +10,6 @@ public:
     void FromJSON(const std::string &json);
     std::string ToJSON() const;
 
-    size_t id;
     std::string carUid;
     std::string brand;
     std::string model;
@@ -18,7 +17,7 @@ public:
     size_t power;
     size_t price;
     std::string type;
-    bool availability;
+    bool available;
 
     auto operator<=>(const CarDTO &) const = default;
 };

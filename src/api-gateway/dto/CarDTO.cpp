@@ -16,30 +16,28 @@ void CarDTO::FromJSON(const std::string &json)
         throw JsonParserException("can't parse PersonDTO object");
     }
 
-    id = value["id"].asUInt64();
-    carUid = value["car_uid"].asString();
+    carUid = value["carUid"].asString();
     brand = value["brand"].asString();
     model = value["model"].asString();
-    registrationNumber = value["registration_number"].asString();
+    registrationNumber = value["registrationNumber"].asString();
     power = value["power"].asUInt64();
     price = value["price"].asUInt64();
     type = value["type"].asString();
-    availability = value["availability"].asBool();
+    available = value["available"].asBool();
 }
 
 Json::Value GetJSON(const CarDTO &person)
 {
     Json::Value root;
 
-    root["id"] = (uint)person.id;
-    root["car_uid"] = person.carUid;
+    root["carUid"] = person.carUid;
     root["brand"] = person.brand;
     root["model"] = person.model;
-    root["registration_number"] = person.registrationNumber;
+    root["registrationNumber"] = person.registrationNumber;
     root["power"] = (uint)person.power;
     root["price"] = (uint)person.price;
     root["type"] = person.type;
-    root["availability"] = person.availability;
+    root["available"] = person.available;
 
     return root;
 }

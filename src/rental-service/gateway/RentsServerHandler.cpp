@@ -9,9 +9,9 @@ RentsServerHandler::RentsServerHandler(const IResponseFactoryPtr &respFactory) :
 
 void RentsServerHandler::HandleRequest(const std::shared_ptr<IRequest> &req)
 {
-    LoggerFactory::GetLogger()->LogInfo((std::string("[persons]: get request: ") + req->GetTarget()).c_str());
+    LoggerFactory::GetLogger()->LogInfo((std::string("[rents]: get request: ") + req->GetTarget()).c_str());
     if (!req->GetBody().empty())
-        LoggerFactory::GetLogger()->LogInfo((std::string("[persons]: request body: ") + req->GetBody()).c_str());
+        LoggerFactory::GetLogger()->LogInfo((std::string("[rents]: request body: ") + req->GetBody()).c_str());
 
     static_req_handler_t route = RequestsRouter::Instanse()->RouteReq(req->GetTarget(), req->GetMethod());
 
@@ -40,8 +40,8 @@ void RentsServerHandler::MakeResponse(const std::shared_ptr<IResponse> &resp)
 {
     resp->copy(m_resp);
     LoggerFactory::GetLogger()->LogInfo(
-        (std::string("[persons]: sending response status: ") + std::to_string((int)resp->GetStatus())).c_str());
+        (std::string("[rents]: sending response status: ") + std::to_string((int)resp->GetStatus())).c_str());
     if (!resp->GetBody().empty())
         LoggerFactory::GetLogger()->LogInfo(
-            (std::string("[persons]: sending response body: ") + resp->GetBody()).c_str());
+            (std::string("[rents]: sending response body: ") + resp->GetBody()).c_str());
 }

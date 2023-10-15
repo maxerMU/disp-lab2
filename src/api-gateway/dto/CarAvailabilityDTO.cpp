@@ -17,7 +17,7 @@ void CarAvailabilityDTO::FromJSON(const std::string &json)
     }
 
     carUid = value["car_uid"].asString();
-    availability = value["availability"].asBool();
+    available = value["available"].asBool();
 }
 
 Json::Value GetJSON(const CarAvailabilityDTO &car)
@@ -25,7 +25,7 @@ Json::Value GetJSON(const CarAvailabilityDTO &car)
     Json::Value root;
 
     root["car_uid"] = car.carUid;
-    root["availability"] = car.availability;
+    root["available"] = car.available;
 
     return root;
 }

@@ -11,7 +11,7 @@ public:
     std::string ToJSON() const;
 
     std::string carUid;
-    bool availability;
+    bool available;
 
     auto operator<=>(const CarAvailabilityDTO &) const = default;
 };

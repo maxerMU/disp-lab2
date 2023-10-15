@@ -10,9 +10,8 @@ void GetRentDTO::FromJSON(const std::string &)
 {
     Json::Value value;
     Json::Reader reader;
-    
-    throw JsonParserException("GetRentDTO from json not implemented");
 
+    throw JsonParserException("GetRentDTO from json not implemented");
 }
 
 Json::Value GetJSON(const GetRentDTO &rent)
@@ -33,7 +32,7 @@ Json::Value GetJSON(const GetRentDTO &rent)
     root["car"] = car;
 
     Json::Value payment;
-    payment["paymentalUid"] = rent.payment.paymentUid;
+    payment["paymentUid"] = rent.payment.paymentUid;
     payment["status"] = rent.payment.status;
     payment["price"] = (uint)rent.payment.price;
 

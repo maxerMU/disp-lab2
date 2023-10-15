@@ -13,6 +13,10 @@ ApiGatewayHandler::ApiGatewayHandler(const IConfigPtr &config) : m_config(config
 
 IClientServerReqHandler::state_t ApiGatewayHandler::HandleRequest(const std::shared_ptr<IRequest> &request)
 {
+    LoggerFactory::GetLogger()->LogInfo((std::string("[gateway]: get request: ") + request->GetTarget()).c_str());
+    if (!request->GetBody().empty())
+        LoggerFactory::GetLogger()->LogInfo((std::string("[gateway]: request body: ") + request->GetBody()).c_str());
+
     m_context = std::make_shared<ApiGatewayContext>();
     m_context->GetCurrentRequest()->copy(request);
 
@@ -85,4 +89,10 @@ IClientServerReqHandler::state_t ApiGatewayHandler::HandleResponse(const IRespon
 void ApiGatewayHandler::MakeResponse(const IResponsePtr &resp)
 {
     resp->copy(m_context->GetCurrentResponse());
+
+    LoggerFactory::GetLogger()->LogInfo(
+        (std::string("[gateway]: sending response status: ") + std::to_string((int)resp->GetStatus())).c_str());
+    if (!resp->GetBody().empty())
+        LoggerFactory::GetLogger()->LogInfo(
+            (std::string("[gateway]: sending response body: ") + resp->GetBody()).c_str());
 }

@@ -18,7 +18,7 @@ public:
     size_t power;
     size_t price;
     std::string type;
-    bool availability;
+    bool available;
 
     auto operator<=>(const CarDTO &) const = default;
 };

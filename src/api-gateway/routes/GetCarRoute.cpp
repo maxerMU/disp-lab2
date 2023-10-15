@@ -1,7 +1,7 @@
 #include "GetCarRoute.h"
 
-#include <exceptions/server_exceptions.h>
 #include <exceptions/logic_exceptions.h>
+#include <exceptions/server_exceptions.h>
 #include <logger/LoggerFactory.h>
 
 #include "clients.h"
@@ -30,7 +30,7 @@ void GetCarRoute::ProcessRequest(const IRequestPtr &request, size_t &clientIndex
         carUid = m_context->GetProcessInfo().getRentsRequest.rents[m_iteration].carUid;
     else if (m_context->GetRequestType() == ApiGatewayContext::PostRent)
         carUid = m_context->GetProcessInfo().postRentRequest.postRent.carUid;
-    
+
     if (carUid.empty())
         throw UndefinedCarUidException("get car route");
 
@@ -69,7 +69,7 @@ IClientServerRoute::ResponceType GetCarRoute::ProcessResponse(const IResponsePtr
     }
     else if (m_context->GetRequestType() == ApiGatewayContext::PostRent)
     {
-        if (!car.availability)
+        if (!car.available)
         {
             m_context->GetCurrentResponse()->SetStatus(net::CODE_400);
             m_context->GetCurrentResponse()->SetBody("car not available");

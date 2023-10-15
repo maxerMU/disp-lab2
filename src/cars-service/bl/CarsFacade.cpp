@@ -44,12 +44,12 @@ CarDTO CarsFacade::GetCar(const std::string &uid)
 {
     if (!m_repository)
         throw NotInitializedException("repository doesn't initilized");
-    
+
     try
     {
         return m_repository->GetCar(uid);
     }
-    catch(const DatabaseNotFoundException& e)
+    catch (const DatabaseNotFoundException &e)
     {
         throw CarNotFoundException(e.what());
     }
@@ -62,9 +62,9 @@ void CarsFacade::UpdateCarAvailability(const CarAvailabilityDTO &car)
 
     try
     {
-        m_repository->UpdateCarAvailability(car.carUid, car.availability);
+        m_repository->UpdateCarAvailability(car.carUid, car.available);
     }
-    catch(const DatabaseNotFoundException& e)
+    catch (const DatabaseNotFoundException &e)
     {
         throw CarNotFoundException(e.what());
     }

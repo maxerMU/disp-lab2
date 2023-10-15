@@ -45,5 +45,7 @@ IClientServerRoute::ResponceType FinishRentRoute::ProcessResponse(const IRespons
         throw ProcessingResponseException("finish rent route invalid code");
     }
 
+    m_context->GetCurrentResponse()->SetStatus(net::CODE_204);
+
     return IClientServerRoute::END_ROUTE;
 }
