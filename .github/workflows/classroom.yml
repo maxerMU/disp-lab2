@@ -28,7 +28,7 @@ jobs:
       - name: Setup db
         run: |
           docker-compose up -d postgres
-          docker-compose logs f postgres
+          docker-compose logs postgres
           # cd postgres
           # ./create_test_database.sh
           # cd ..
@@ -41,10 +41,10 @@ jobs:
           docker-compose up -d cars-service
           docker-compose up -d api-gateway
 
-          docker-compose logs f rental-service
-          docker-compose logs f payments-service
-          docker-compose logs f cars-service
-          docker-compose logs f api-gateway
+          docker-compose logs rental-service
+          docker-compose logs payments-service
+          docker-compose logs cars-service
+          docker-compose logs api-gateway
           # ./scripts/wait-script.sh
         env:
           WAIT_PORTS: 8080,8070,8060,8050
