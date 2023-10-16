@@ -25,10 +25,18 @@
 #include "routes/CancelRentPrep.h"
 #include "routes/CancelRentRoute.h"
 #include "routes/CancelPaymentRoute.h"
+#include "routes/HealthRoute.h"
 
 void SetupRouter()
 {
-    std::vector<IClientServerRouteCreatorPtr> getCarsRoute{std::make_shared<ClientServerRouteCreator<GetCarsRoute>>()};
+    std::vector<IClientServerRouteCreatorPtr> healthRoute{
+        std::make_shared<ClientServerRouteCreator<HealthRoute>>(),
+    };
+    RequestsRouter::Instanse()->AddStaticEndpoint({"/manage/health", net::GET}, healthRoute);
+
+    std::vector<IClientServerRouteCreatorPtr> getCarsRoute{
+        std::make_shared<ClientServerRouteCreator<GetCarsRoute>>()
+    };
     std::regex getCarsTarget("/api/v1/cars\\?page=([0-9\\-]+)&size=([0-9\\-]+)&showAll=(true|false)");
     RequestsRouter::Instanse()->AddDynamicEndpoint({getCarsTarget, net::GET}, getCarsRoute);
 

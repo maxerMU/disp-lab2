@@ -34,6 +34,8 @@ target_sources( ${PROJECT_NAME} PRIVATE
   dto/CarAvailabilityDTO.h
   dto/CarAvailabilityDTO.cpp
 
+  routes/HealthRoute.h
+  routes/HealthRoute.cpp
   routes/GetRentPrep.h
   routes/GetRentPrep.cpp
   routes/GetRentsPrep.h
