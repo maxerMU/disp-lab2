@@ -31,7 +31,7 @@ jobs:
           docker-compose logs postgres
           sleep 5
           cd postgres
-          ./create_test_database.sh
+          ./30-create_test_database.sh
           cd ..
 
       - name: Run containers
