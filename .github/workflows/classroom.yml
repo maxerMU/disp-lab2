@@ -21,13 +21,14 @@ jobs:
         timeout-minutes: 10
         run: |
           docker-compose build postgres
-          docker-compose build api-gateway
-          docker-compose build rental-service
-          docker-compose build payments-service
-          docker-compose build cars-service
+          # docker-compose build api-gateway
+          # docker-compose build rental-service
+          # docker-compose build payments-service
+          # docker-compose build cars-service
       - name: Setup db
         run: |
           docker-compose up -d postgres
+          docker-compose logs -f postgres
           cd postgres
           ./create_test_database.sh
           cd ..
@@ -40,7 +41,6 @@ jobs:
           docker-compose up -d cars-service
           docker-compose up -d api-gateway
 
-          docker-compose up -d postgres
           docker-compose logs -f rental-service
           docker-compose logs -f payments-service
           docker-compose logs -f cars-service
